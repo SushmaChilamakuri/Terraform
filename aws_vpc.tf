@@ -75,3 +75,31 @@ resource "aws_route_table_association" "ecomm-pvt-asc" {
   subnet_id      = aws_subnet.ecomm-pvt-sn.id
   route_table_id = aws_route_table.ecomm-pvt-rt.id
 }
+
+# Public NACL
+resource "aws_network_acl" "ecomm-pub-nacl" {
+  vpc_id = aws_vpc.ecomm.id
+  subnet_ids = [aws_subnet.ecomm-pub-sn.id]
+
+  egress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 65535
+  }
+
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 65535
+  }
+
+  tags = {
+    Name = "ecomm-public-nacl"
+  }
+}
